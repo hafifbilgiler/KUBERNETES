@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-deneme
+spec:
+  template:
+    spec:      
+      containers:
+      - name: job-deneme
+        image: alpine
+        command: ['sh', '-c', 'echo JOB BASARILI BIR SEKILDE CALISTI ; sleep 10']
+      restartPolicy: Never
