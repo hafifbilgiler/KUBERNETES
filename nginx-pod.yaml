@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-deneme
+  labels:
+    name: nginx-deneme
+spec:
+  containers:
+  - name: nginx-deneme
+    image: nginx
+    ports:
+      - containerPort: 80
