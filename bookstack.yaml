@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstack
+  labels:
+    app: bookstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstack
+  template:
+    metadata:
+      labels:
+        app: bookstack
+    spec:
+      containers:
+      - name: bookstack
+        image: linuxserver/bookstack
+        ports:
+        - containerPort: 80
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "986"
+        - name: DB_HOST
+          value: "10.244.0.86"
+        - name: DB_USER
+          value: "bookstack"
+        - name: DB_PASS
+          value: "bookstack"
+        - name: DB_DATABASE
+          value: "bookstack"
+        volumeMounts:
+        - mountPath: "/config"
+          name: bokstackvolume
+      volumes:
+      - name: bokstackvolume
+        persistentVolumeClaim:
+          claimName: bookstackpvc
