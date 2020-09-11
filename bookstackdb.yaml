@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstackdb
+  labels:
+    app: bookstackdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstackdb
+  template:
+    metadata:
+      labels:
+        app: bookstackdb
+    spec:
+      containers:
+      - name: bookstackdb
+        image: linuxserver/mariadb
+        ports:
+        - containerPort: 3306
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "986"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "bookstack"
+        - name: MYSQL_DATABASE
+          value: "bookstack"
+        - name: MYSQL_USER
+          value: "bookstack"  
+        - name: MYSQL_PASSWORD
+          value: "bookstack"
+        - name: TZ
+          value: "Europe/London"   
+        volumeMounts:
+        - mountPath: "/config"
+          name: bokstackdbvolume
+      volumes:
+      - name: bokstackdbvolume
+        persistentVolumeClaim:
+          claimName: bookstackdbpvc
