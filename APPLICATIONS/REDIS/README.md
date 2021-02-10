@@ -1,4 +1,5 @@
-=======================================================================================================
+=============================================================
+
 Hi valuable user, you can initiate cluster with this yaml files , after create pod and other componnent you can use script to create redis cluster.
 
 ==============REDIS APPLICATION RUN ON KUBERNETES========================
