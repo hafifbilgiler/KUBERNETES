@@ -24,3 +24,6 @@ kubectl create -f redis-svc.yaml
 5)Create Redis Statefulset Resources Of Kubernetes 
 
 kubectl create -f redis.yaml
+
+6)Use Initiate Script
+
