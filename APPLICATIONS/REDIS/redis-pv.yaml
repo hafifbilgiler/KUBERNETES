@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv01
+  labels:
+    type: local01
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis01"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv02
+  labels:
+    type: local02
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis02"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv03
+  labels:
+    type: local03
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis03"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv04
+  labels:
+    type: local04
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis04"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv05
+  labels:
+    type: local05
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis05"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redispv06
+  labels:
+    type: local06
+spec:
+  storageClassName: "redis-storage"
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/Redis/Redis06"
