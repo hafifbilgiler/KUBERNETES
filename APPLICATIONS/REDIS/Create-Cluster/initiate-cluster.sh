@@ -25,7 +25,7 @@ echo -e "$PURPLE   \ \  \ \  \  ___   \ \  \_\  \  ___ $NOCOLOR"
 echo -e "$PURPLE    \ \__\ \__\|\__\   \ \_______\|\__\ $NOCOLOR"
 echo -e "$PURPLE     \|__|\|__|\|__|    \|_______|\|__| $NOCOLOR"
 echo -e "$PURPLE THIS SCRIPT CREATED BY HAFIFBILGILER $NOCOLOR"
-echo -e "$GREEN THANK YOU FOR VISIT MY WEB SITE... $NOCOLOR"
+echo -e "$PURPLE ________________________________v1.1 $NOCOLOR"
 echo -e "$GREEN YOU CAN INITIATE REDIS CLUSTER ON KUBERNETES  WITH THIS SCRIPT $NOCOLOR"
 #====================================================================
 while true
@@ -37,7 +37,8 @@ do
         echo -e "$GREEN | 3) CHECK CLUSTER STATUS                   |$NOCOLOR"
         echo -e "$GREEN | 4) CHECK CLUSTER ROLE                     |$NOCOLOR"
         echo -e "$GREEN | 5) SEND DEMO MESSAGES                     |$NOCOLOR"
-        echo -e "$GREEN | 6) EXIT                                   |$NOCOLOR"
+        echo -e "$GREEN | 6) RESET CLUSTER                          |$NOCOLOR"
+        echo -e "$GREEN | 7) EXIT                                   |$NOCOLOR"
         echo -e "$GREEN  =========================================== $NOCOLOR"
 #====================================================================
         read -p "WHICH ONE DO YOU WANT ?: " COMMAND
@@ -61,7 +62,7 @@ do
            POD_MASTER=$(kubectl get pods -l app=redis-cluster -o jsonpath='{range.items[0]}{.metadata.name}')
            POD_IP_ADDRESS=$(kubectl get pods -l app=redis-cluster -o jsonpath='{range.items[*]}{.status.podIP}:6379 ')
            POD_ADD_PORT=${POD_IP_ADDRESS::-6}
-           CREATE=$(kubectl exec -it $POD_MASTER -- redis-cli --cluster create --cluster-replicas 1 $POD_ADD_PORT 2>&1)
+           CREATE=$(echo "yes" | kubectl exec -it $POD_MASTER -- redis-cli --cluster create --cluster-replicas 1 $POD_ADD_PORT 2>&1)
            if [[ $CREATE == *"[ERR]"* ]]; then
                echo -e  "$RED 1) MAYBE  ALREADY YOU HAVE CLUSTER  $NOCOLOR"
                echo -e  "$RED 2) MAYBE OTHER PROBLEM PLEASE CHECK YOUR PODS AND CLUSTER  $NOCOLOR"
@@ -91,6 +92,17 @@ do
            kubectl exec -it $POD_MASTER -- redis-cli get $KEY
            ;;
          6)
+           for count in $(seq 0 5); do
+           POD=$(kubectl get pods -l app=redis-cluster -o jsonpath={range.items[$count]}{.metadata.name})
+           echo -e "$PURPLE===============================================$NOCOLOR"
+           echo -e "$GREEN"
+           echo $POD
+           echo -e "$NOCOLOR"
+           kubectl exec -it $POD -- sh -c "redis-cli flushall && redis-cli flushdb && redis-cli cluster reset"
+           echo -e "$PURPLE===============================================$NOCOLOR"
+           done
+           ;;
+         7)
            echo -e "$BLUE BYE... $NOCOLOR"
            break;
         esac
