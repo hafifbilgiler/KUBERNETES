@@ -42,7 +42,7 @@ do
         echo -e "$GREEN  =========================================== $NOCOLOR"
 #====================================================================
         read -p "WHICH ONE DO YOU WANT ?: " COMMAND
-        if [[ $COMMAND > 6  ]]
+        if [[ $COMMAND > 7   ||  $COMMAND -le 0  ]]
          then
             echo -e  "$RED UNFOURTUNALETY WE DO NOT HAVE YOUR COMMAND IN THE SECTION  $NOCOLOR"
           break;
