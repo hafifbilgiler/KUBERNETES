@@ -16,6 +16,7 @@ POD_MASTER=""
 POD_IP_ADDRESS=""
 INITIATE_CLUSTER=""
 CONNECT_POD=""
+POD_ALL=""
 #=====================================================================
 echo -e "$PURPLE  ___  ___           ________ $NOCOLOR"
 echo -e "$PURPLE |\  \|\  \         |\   __  \ $NOCOLOR"
@@ -38,14 +39,15 @@ do
         echo -e "$GREEN | 4) CHECK CLUSTER ROLE                     |$NOCOLOR"
         echo -e "$GREEN | 5) SEND DEMO MESSAGES                     |$NOCOLOR"
         echo -e "$GREEN | 6) RESET CLUSTER                          |$NOCOLOR"
-        echo -e "$GREEN | 7) EXIT                                   |$NOCOLOR"
+        echo -e "$GREEN | 7) DELETE ALL PODS                        |$NOCOLOR"
+        echo -e "$GREEN | 8) EXIT                                   |$NOCOLOR"
         echo -e "$GREEN  =========================================== $NOCOLOR"
 #====================================================================
         read -p "WHICH ONE DO YOU WANT ?: " COMMAND
-        if [[ $COMMAND > 7   ||  $COMMAND -le 0  ]]
+        if [[ $COMMAND > 8  ||  $COMMAND -le 0  ]]
          then
             echo -e  "$RED UNFOURTUNALETY WE DO NOT HAVE YOUR COMMAND IN THE SECTION  $NOCOLOR"
-          break;
+         # break;
          fi
         POD_MASTER=$(kubectl get pods -l app=redis-cluster -o jsonpath='{range.items[0]}{.metadata.name}')
 
@@ -102,7 +104,10 @@ do
            echo -e "$PURPLE===============================================$NOCOLOR"
            done
            ;;
-         7)
+         7)POD_ALL=$(kubectl get pods -l app=redis-cluster -o jsonpath='{range.items[*]}{.metadata.name} ')
+           kubectl delete pods $POD_ALL
+           ;;
+         8)
            echo -e "$BLUE BYE... $NOCOLOR"
            break;
         esac
