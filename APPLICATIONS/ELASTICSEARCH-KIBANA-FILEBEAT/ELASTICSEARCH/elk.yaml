@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es01
+  labels:
+    app: es01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es01
+  template:
+    metadata:
+      labels:
+        app: es01
+   spec:
+      containers:
+      - name: es01
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+        resources:
+         limits:
+           cpu: 1000m
+         requests:
+           cpu: 100m
+        ports:
+        - name: req
+          containerPort: 9200
+          protocol: TCP
+        - name: inter-node
+          containerPort: 9300
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/usr/share/elasticsearch/data"
+          name: es01
+        env:
+        - name: cluster.name
+          value: es-k8s-cluster
+        - name: node.name
+          value: es01
+        - name: discovery.seed_hosts
+          value: "10.106.67.54,10.111.128.31"
+        - name: cluster.initial_master_nodes
+          value: "es01,es02"
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+        volumeMounts:
+        - mountPath: "/usr/share/elasticsearch/data"
+          name: es01
+      - name: increase-vm-max-map
+        image: busybox
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      - name: increase-fd-ulimit
+        image: busybox
+        command: ["sh", "-c", "ulimit -n 65536"]
+        securityContext:
+          privileged: true
+      volumes:
+      - name: es01
+        persistentVolumeClaim:
+          claimName: es01pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es02
+  labels:
+    app: es02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es02
+  template:
+    metadata:
+      labels:
+        app: es02
+    spec:
+      containers:
+      - name: es02
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+        resources:
+         limits:
+           cpu: 1000m
+         requests:
+           cpu: 100m
+        ports:
+        - name: req
+          containerPort: 9200
+          protocol: TCP
+        - name: inter-node
+          containerPort: 9300
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/usr/share/elasticsearch/data"
+           name: es02
+        env:
+        - name: cluster.name
+          value: es-k8s-cluster
+        - name: node.name
+          value: es02
+        - name: discovery.seed_hosts
+          value: "10.106.67.54,10.111.128.31"
+        - name: cluster.initial_master_nodes
+          value: "es01,es02"
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+        volumeMounts:
+        - mountPath: "/usr/share/elasticsearch/data"
+          name: es02
+       - name: increase-vm-max-map
+         image: busybox
+         command: ["sysctl", "-w", "vm.max_map_count=262144"]
+         securityContext:
+           privileged: true
+       - name: increase-fd-ulimit
+         image: busybox
+         command: ["sh", "-c", "ulimit -n 65536"]
+         securityContext:
+           privileged: true
+       volumes:
+       - name: es02
+         persistentVolumeClaim:
+           claimName: es02pvc
