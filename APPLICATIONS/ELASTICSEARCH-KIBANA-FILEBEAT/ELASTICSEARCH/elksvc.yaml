@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: es01
+  labels:
+    app: es01
+spec:
+  ports:
+  - name: rest
+    port: 9200
+    protocol: TCP
+  - name: internode
+    port: 9300
+    protocol: TCP
+  selector:
+    app: es01 
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es02
+  labels:
+    app: es02
+spec:
+  ports:
+  - name: rest
+    port: 9200
+    protocol: TCP
+  - name: internode
+    port: 9300
+    protocol: TCP
+  selector:
+    app: es02
+  type: NodePort 
